@@ -1414,6 +1414,9 @@ OPTION(rgw_period_push_interval_max, OPT_DOUBLE, 30) // maximum interval after e
 
 OPTION(rgw_swift_versioning_enabled, OPT_BOOL, false) // whether swift object versioning feature is enabled
 
+OPTION(rgw_compression_enabled, OPT_BOOL, true) // to use compression on rgw level
+OPTION(rgw_compression_type, OPT_STR, "zlib") // type of compressor
+
 OPTION(mutex_perf_counter, OPT_BOOL, false) // enable/disable mutex perf counter
 OPTION(throttler_perf_counter, OPT_BOOL, true) // enable/disable throttler perf counter
 
