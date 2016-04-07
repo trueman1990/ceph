@@ -2611,8 +2611,6 @@ void RGWPutObj::execute()
       op_ret = len;
       goto done;
     }
-    if (!len)
-      break;
 
     /* do we need this operation to be synchronous? if we're dealing with an object with immutable
      * head, e.g., multipart object we need to make sure we're the first one writing to this object
