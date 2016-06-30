@@ -1077,7 +1077,7 @@ int RGWGetObj_ObjStore_SWIFT::send_response_data(bufferlist& bl,
                                                  const off_t bl_ofs,
                                                  const off_t bl_len)
 {
-  string content_type; int rr;
+  string content_type;
 
   if (sent_header) {
     goto send_data;
@@ -1099,7 +1099,7 @@ int RGWGetObj_ObjStore_SWIFT::send_response_data(bufferlist& bl,
   dump_last_modified(s, lastmod);
   {
     utime_t ut(lastmod);
-    rr = STREAM_IO(s)->print("X-Timestamp: %lld.%05d\r\n", (long long)ut.sec(), (int)(ut.usec() / 10));
+    STREAM_IO(s)->print("X-Timestamp: %lld.%05d\r\n", (long long)ut.sec(), (int)(ut.usec() / 10));
   }
   if (is_slo) {
     STREAM_IO(s)->print("X-Static-Large-Object: True\r\n");

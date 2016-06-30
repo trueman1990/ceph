@@ -89,7 +89,8 @@ librgw_la_SOURCES = \
 	rgw/librgw.cc \
 	rgw/rgw_xml.cc \
 	rgw/rgw_xml_enc.cc \
-	rgw/rgw_website.cc
+	rgw/rgw_website.cc \
+	rgw/rgw_compression.cc
 
 if WITH_OPENLDAP
 librgw_la_SOURCES += rgw/rgw_ldap.cc
@@ -257,6 +258,7 @@ noinst_HEADERS += \
 	rgw/rgw_civetweb_log.h \
 	rgw/rgw_website.h \
 	rgw/rgw_rest_s3website.h \
+	rgw/rgw_compression.h \
 	civetweb/civetweb.h \
 	civetweb/include/civetweb.h \
 	civetweb/include/civetweb_conf.h \
