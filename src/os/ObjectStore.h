@@ -2315,6 +2315,7 @@ public:
   * - num objects - total (including witeouts) object count to measure used space for.
   */
   virtual uint64_t estimate_objects_overhead(uint64_t num_objects) = 0;
+  virtual int apply_layout_settings(coll_t cid) { assert(0); return 0; }
 
   // DEBUG
   virtual void inject_data_error(const ghobject_t &oid) {}
