@@ -693,6 +693,13 @@ ceph_test_cors_LDADD = \
 ceph_test_cors_CXXFLAGS = $(UNITTEST_CXXFLAGS)
 bin_DEBUGPROGRAMS += ceph_test_cors
 
+unittest_rgw_compression_SOURCES = test/rgw/test_rgw_compression.cc
+unittest_rgw_compression_LDADD = \
+	$(LIBRADOS) $(LIBRGW) $(LIBRGW_DEPS) $(CEPH_GLOBAL) \
+	$(UNITTEST_LDADD)
+unittest_rgw_compression_CXXFLAGS = $(UNITTEST_CXXFLAGS)
+check_TESTPROGRAMS += unittest_rgw_compression
+
 ceph_test_rgw_manifest_SOURCES = test/rgw/test_rgw_manifest.cc
 ceph_test_rgw_manifest_LDADD = \
 	$(LIBRADOS) $(LIBRGW) $(LIBRGW_DEPS) $(CEPH_GLOBAL) \

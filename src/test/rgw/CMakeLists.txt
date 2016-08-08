@@ -3,6 +3,11 @@ add_executable(unittest_rgw_period_history EXCLUDE_FROM_ALL test_rgw_period_hist
 add_ceph_unittest(unittest_rgw_period_history ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unittest_rgw_period_history)
 target_link_libraries(unittest_rgw_period_history rgw_a)
 
+# unitttest_rgw_compression
+add_executable(unittest_rgw_compression test_rgw_compression.cc)
+add_ceph_unittest(unittest_rgw_compression ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unittest_rgw_compression)
+target_link_libraries(unittest_rgw_compression rgw_a)
+
 # ceph_test_rgw_manifest
 set(test_rgw_manifest_srcs test_rgw_manifest.cc)
 add_executable(ceph_test_rgw_manifest
