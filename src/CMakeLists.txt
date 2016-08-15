@@ -1113,6 +1113,7 @@ if(${WITH_RADOSGW})
     rgw/rgw_cache.cc
     rgw/rgw_client_io.cc
     rgw/rgw_common.cc
+    rgw/rgw_compression.cc
     rgw/rgw_cors.cc
     rgw/rgw_cors_s3.cc
     rgw/rgw_dencoder.cc
