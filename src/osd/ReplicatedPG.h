@@ -93,6 +93,7 @@ public:
     uint32_t source_data_digest, source_omap_digest;
     uint32_t data_digest, omap_digest;
     vector<pair<osd_reqid_t, version_t> > reqids; // [(reqid, user_version)]
+    map<string, bufferlist> attrs; // xattrs
     uint64_t truncate_seq;
     uint64_t truncate_size;
     bool is_data_digest() {
@@ -1360,8 +1361,6 @@ protected:
     return size;
   }
   void _copy_some(ObjectContextRef obc, CopyOpRef cop);
-  void _build_finish_copy_transaction(CopyOpRef cop,
-                                      PGTransaction *t);
   void finish_copyfrom(OpContext *ctx);
   void finish_promote(int r, CopyResults *results, ObjectContextRef obc);
   void cancel_copy(CopyOpRef cop, bool requeue);

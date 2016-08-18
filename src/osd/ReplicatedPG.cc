@@ -7200,6 +7200,15 @@ void ReplicatedPG::process_copy_chunk(hobject_t oid, ceph_tid_t tid, int r)
     }
   }
 
+  if (!cop->temp_cursor.attr_complete) {
+    for (map<string,bufferlist>::iterator p = cop->attrs.begin();
+	 p != cop->attrs.end();
+	 ++p) {
+      cop->results.attrs[string("_") + p->first] = p->second;
+    }
+    cop->attrs.clear();
+  }
+
   if (!cop->cursor.is_complete()) {
     // write out what we have so far
     if (cop->temp_cursor.is_initial()) {
@@ -7266,7 +7275,17 @@ void ReplicatedPG::process_copy_chunk(hobject_t oid, ceph_tid_t tid, int r)
 
   cop->results.fill_in_final_tx = std::function<void(PGTransaction*)>(
     [this, &cop /* avoid ref cycle */](PGTransaction *t) {
-      _build_finish_copy_transaction(cop, t);
+      ObjectState& obs = cop->obc->obs;
+      if (cop->temp_cursor.is_initial()) {
+	// write directly to final object
+	cop->results.temp_oid = obs.oi.soid;
+	_write_copy_chunk(cop, t);
+      } else {
+	// finish writing to temp object, then move into place
+	_write_copy_chunk(cop, t);
+	t->rename(obs.oi.soid, cop->results.temp_oid);
+      }
+      t->setattrs(obs.oid.soid, cop->results.attrs);
     });
 
   dout(20) << __func__ << " success; committing" << dendl;
@@ -7323,14 +7342,6 @@ void ReplicatedPG::_write_copy_chunk(CopyOpRef cop, PGTransaction *t)
 	   << dendl;
   if (!cop->temp_cursor.attr_complete) {
     t->create(cop->results.temp_oid);
-    for (map<string,bufferlist>::iterator p = cop->attrs.begin();
-	 p != cop->attrs.end();
-	 ++p) {
-      t->setattr(
-	cop->results.temp_oid,
-	string("_") + p->first, p->second);
-    }
-    cop->attrs.clear();
   }
   if (!cop->temp_cursor.data_complete) {
     assert(cop->data.length() + cop->temp_cursor.data_offset ==
@@ -7383,21 +7394,6 @@ void ReplicatedPG::_write_copy_chunk(CopyOpRef cop, PGTransaction *t)
     assert(cop->omap_data.length() == 0);
   }
   cop->temp_cursor = cop->cursor;
-}
-
-void ReplicatedPG::_build_finish_copy_transaction(CopyOpRef cop,
-                                                  PGTransaction* t)
-{
-  ObjectState& obs = cop->obc->obs;
-  if (cop->temp_cursor.is_initial()) {
-    // write directly to final object
-    cop->results.temp_oid = obs.oi.soid;
-    _write_copy_chunk(cop, t);
-  } else {
-    // finish writing to temp object, then move into place
-    _write_copy_chunk(cop, t);
-    t->rename(obs.oi.soid, cop->results.temp_oid);
-  }
 }
 
 void ReplicatedPG::finish_copyfrom(OpContext *ctx)
