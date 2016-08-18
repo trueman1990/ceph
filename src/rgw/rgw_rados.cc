@@ -9070,6 +9070,9 @@ int RGWRados::get_system_obj(RGWObjectCtx& obj_ctx, RGWRados::SystemObject::Read
   int r = get_system_obj_state(&obj_ctx, obj, &astate, NULL);
   if (r < 0)
     return r;
+  if (!astate->exists) {
+    return -ENOENT;
+  }
 
   if (end < 0)
     len = 0;
