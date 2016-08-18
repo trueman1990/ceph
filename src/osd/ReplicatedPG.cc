@@ -7285,7 +7285,7 @@ void ReplicatedPG::process_copy_chunk(hobject_t oid, ceph_tid_t tid, int r)
 	_write_copy_chunk(cop, t);
 	t->rename(obs.oi.soid, cop->results.temp_oid);
       }
-      t->setattrs(obs.oid.soid, cop->results.attrs);
+      t->setattrs(obs.oi.soid, cop->results.attrs);
     });
 
   dout(20) << __func__ << " success; committing" << dendl;
