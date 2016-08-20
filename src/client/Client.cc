@@ -6079,9 +6079,11 @@ int Client::path_walk(const filepath& origpath, InodeRef *end, bool followsym,
       caps = CEPH_CAP_AUTH_SHARED;
     }
 
+#if 0
     /* Get extra requested caps on the last component */
     if (i == (path.depth() - 1))
       caps |= mask;
+#endif
 
     int r = _lookup(cur.get(), dname, caps, &next, uid, gid);
     if (r < 0)
